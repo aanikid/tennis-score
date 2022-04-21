@@ -2,51 +2,74 @@ import {PlayerType, TennisActionType, TennisStateType} from "../types";
 import {PLAY_PAUSE, POINT_SCORED, RESTART_GAME} from "../constants/TennisConstants";
 import produce from "immer";
 
-const initialState = {
+export const initialState = {
     player1: {score: 0, name: 'Federer'},
     player2: {score: 0, name: 'Nalbadian'},
     advantage: null,
     winner: null,
     playing: true,
+    gameHistory: [],
 } as TennisStateType;
 
 export function tennisReducer(state = initialState, action: TennisActionType) {
-    switch (action.type) {
-        case RESTART_GAME:
-            return initialState;
-        case PLAY_PAUSE:
-            return {...state, playing: !state.playing};
-        case POINT_SCORED:
-            const player: string  = action.payload!.player
-            const otherPlayer = player === 'player1' ? 'player2' : 'player1';
-            const currentPlayerScored = state[player as keyof typeof initialState] as PlayerType;
-            switch (true){
-                case null !== state.winner:
-                    return state;
-                case !state.playing:
-                    return state;
-                case currentPlayerScored.score <= 15:
-                    return {...state, [player] : {...currentPlayerScored, score: currentPlayerScored.score +15}};
-                case currentPlayerScored.score === 30:
-                    return {...state, [player]: {...currentPlayerScored, score: 40}};
-                case currentPlayerScored.score === 40:
-                    if(state[otherPlayer].score !== 40){
-                        return {...state, winner: player};
-                    }
-                    if(state.advantage === player){
-                        return {...state, winner: player};
-                    }
-                    if(state.advantage === null){
-                        return {...state, advantage: player}
-                    }
-                    break;
-                default:
-                    return {...state, advantage: null}
+    if (action.type === RESTART_GAME) {
+        return produce(state, (draft) => {
+            if (draft.winner) {
+                draft.gameHistory.push({
+                    player1: draft.player1.score,
+                    player2: draft.player2.score,
+                    winner: draft.winner
+                } as never);
             }
-            break;
-        default:
-            return state;
+            draft.player1.score = 0;
+            draft.player2.score = 0;
+            draft.advantage = null;
+            draft.winner = null;
+            draft.playing = true;
+        });
     }
+    if (action.type === PLAY_PAUSE) {
+        if (state.winner) {
+            return state;
+        }
+        return produce(state, (draft) => {
+            draft.playing = !draft.playing;
+        });
+    }
+    if (action.type === POINT_SCORED) {
+        const player = action?.payload!.player;
+        const otherPlayer = player === "player1" ? "player2" : "player1";
+        if (state.winner) {
+            return state;
+        }
+        if (!state.playing) {
+            return state;
+        }
+        return produce(state, (draft) => {
+            const currentPlayerScore = draft[player as keyof typeof initialState] as PlayerType;
+            if (currentPlayerScore.score <= 15) {
+                currentPlayerScore.score += 15
+                return;
+            }
+            if (currentPlayerScore.score === 30) {
+                currentPlayerScore.score = 40
+                return;
+            }
+            if (currentPlayerScore.score === 40) {
+                if (draft.advantage === player || draft[otherPlayer].score !== 40) {
+                    draft.winner = player;
+                    return;
+                }
+                if (draft.advantage === null) {
+                    draft.advantage = player;
+                    return;
+                }
+                draft.advantage = null;
+                return;
+            }
+        })
+    }
+    return state;
 }
 
 export default tennisReducer;
