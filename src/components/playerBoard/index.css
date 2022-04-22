@@ -1,0 +1,21 @@
+.img-container{
+    width: 200px;
+    height: 200px;
+    overflow: hidden;
+    border-radius: 10px;
+}
+.img{
+    width: 100%;
+    height: 100%;
+}
+.info-container{
+    display: flex;
+    align-items: center;
+    width: 150px;
+    height: 50px;
+    border-radius: 10px;
+}
+.icon{
+    width: 100%;
+    height: 100%;
+}

@@ -5,12 +5,17 @@ import './app.css'
 import {Score} from "./components/score/Score";
 import {useSelector} from "react-redux";
 import {RootState} from "./redux/reducers";
+import PlayerBoard from "./components/playerBoard/PlayerBoard";
 
 function App() {
-    const state = useSelector((state: RootState) => state.tennis)
+    const state = useSelector((state: RootState) => state.tennis);
     return (
             <div className="root">
                 <Score state={state} />
+                <div style={{display: "flex", justifyContent: "space-between"}}>
+                    <PlayerBoard playerId={'player1'}/>
+                    <PlayerBoard playerId={'player2'}/>
+                </div>
                 <div className="buttons">
                     <div className="buttons-row">
                         <Buttons action={pointScored('player1')} title={`Point ${state?.player1.name}`}/>
