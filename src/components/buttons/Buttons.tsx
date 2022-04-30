@@ -4,15 +4,16 @@ import {TennisActionType} from "../../redux/types";
 import  './styles.css'
 
 interface ButtonsInterface {
-    title: string,
-    action: TennisActionType
+    title?: string,
+    action: TennisActionType,
+    style?: string,
 }
 
-export const Buttons: React.FC<ButtonsInterface> = ({action, title}) => {
+export const Buttons: React.FC<ButtonsInterface> = ({action, title, style, children}) => {
     const dispatch = useDispatch();
     return (
-        <button className="Button" onClick={() => dispatch(action)}>
-            {title}
+        <button className={style || "Button"} onClick={() => dispatch(action)}>
+            {title || children}
         </button>
     )
 }

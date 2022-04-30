@@ -11,16 +11,18 @@ function App() {
     const state = useSelector((state: RootState) => state.tennis);
     return (
             <div className="root">
-                <Score state={state} />
-                <div style={{display: "flex", justifyContent: "space-between"}}>
+                <div className={'flex-col items-center justify-between bg-indigo-50 p-5 rounded-xl mb-5'}>
+                    <div>
+                        <div className={'grid grid-cols-2 w-1/3 w-full ml-auto text-xl font-bold'}>
+                            <p>Jeux</p>
+                            <p>Score</p>
+                        </div>
+                    </div>
                     <PlayerBoard playerId={'player1'}/>
                     <PlayerBoard playerId={'player2'}/>
                 </div>
+
                 <div className="buttons">
-                    <div className="buttons-row">
-                        <Buttons action={pointScored('player1')} title={`Point ${state?.player1.name}`}/>
-                        <Buttons action={pointScored('player2')} title={`Point ${state?.player2.name}`}/>
-                    </div>
                     <div className="buttons-row">
                         <Buttons action={restartGame()} title={'Remettre à zéro'}/>
                         <Buttons action={playPause()} title={'Pause / Reprendre'}/>
