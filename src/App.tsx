@@ -1,34 +1,29 @@
 import React from 'react';
-import {Buttons} from "./components/buttons/Buttons";
-import {playPause, pointScored, restartGame} from "./redux/actions/TennisActions";
-import './app.css'
-import {Score} from "./components/score/Score";
-import {useSelector} from "react-redux";
-import {RootState} from "./redux/reducers";
-import PlayerBoard from "./components/playerBoard/PlayerBoard";
+import PlayerBoard from "./components/PlayerBoard";
+import {faPlay, faRotateBack} from "@fortawesome/free-solid-svg-icons";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {Buttons} from "./components/Buttons";
+import {pointScored, restartGame} from "./redux/actions/TennisActions";
 
 function App() {
-    const state = useSelector((state: RootState) => state.tennis);
     return (
-            <div className="root">
-                <div className={'flex-col items-center justify-between bg-indigo-50 p-5 rounded-xl mb-5'}>
-                    <div>
-                        <div className={'grid grid-cols-2 w-1/3 w-full ml-auto text-xl font-bold'}>
-                            <p>Jeux</p>
-                            <p>Score</p>
-                        </div>
-                    </div>
-                    <PlayerBoard playerId={'player1'}/>
+        <div className="flex flex-col justify-center items-center w-screen h-screen">
+            <h1 className={'font-bold my-4 text-xl'}>OpenClassRoom Challenge: Tennis-Score</h1>
+            <div className={'flex w-full h-[250px] justify-center'}>
+                <div className={'flex-col items-center justify-between bg-indigo-50 p-5 rounded-tl-xl rounded-bl-xl h-full mb-5 w-1/2'}>
+                    <PlayerBoard playerId={'player1'} isFirst/>
                     <PlayerBoard playerId={'player2'}/>
                 </div>
-
-                <div className="buttons">
-                    <div className="buttons-row">
-                        <Buttons action={restartGame()} title={'Remettre à zéro'}/>
-                        <Buttons action={playPause()} title={'Pause / Reprendre'}/>
-                    </div>
+                <div className="bg-indigo-700 rounded-tr-xl rounded-br-xl relative h-full w-14 items-center flex flex-col w-full h-full justify-around">
+                    <Buttons action={pointScored()}>
+                        <FontAwesomeIcon icon={faPlay} size={'lg'} color={'white'} className={'cursor-pointer'}/>
+                    </Buttons>
+                    <Buttons action={restartGame()}>
+                        <FontAwesomeIcon icon={faRotateBack} size={'lg'} color={'white'} className={'cursor-pointer'}/>
+                    </Buttons>
                 </div>
             </div>
+        </div>
     );
 }
 

@@ -1,7 +1,6 @@
 import React from "react";
 import {useDispatch} from "react-redux";
-import {TennisActionType} from "../../redux/types";
-import  './styles.css'
+import {TennisActionType} from "../redux/types";
 
 interface ButtonsInterface {
     title?: string,
