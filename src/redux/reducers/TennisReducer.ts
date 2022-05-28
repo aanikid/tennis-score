@@ -1,5 +1,5 @@
 import {PlayerType, TennisStateType} from "../types";
-import { POINT_SCORED, RESTART_GAME} from "../constants/TennisConstants";
+import {POINT_SCORED, RESTART_GAME, SET_PAUSE} from "../constants/TennisConstants";
 import produce from "immer";
 
 export const initialState = {
@@ -14,6 +14,11 @@ export const initialState = {
 export function tennisReducer(state = initialState, action: any) {
     if (action.type === RESTART_GAME) {
        return initialState;
+    }
+    if(action.type === SET_PAUSE){
+        return produce(state, (draft) => {
+            draft.playing = !state.playing;
+        })
     }
     if (action.type === POINT_SCORED) {
         const player = () => {
